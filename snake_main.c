@@ -15,7 +15,7 @@ typedef struct {
 
 void game_setup(pos* player, pos* dir, pos* fruit);
 void generate_game(pos* player, pos* fruit);
-int create_fruit_pos();
+void create_fruit_pos(pos* fruit);
 void get_input(pos* dir);
 void process_input(pos* player, pos* dir, pos* fruit);
 
@@ -53,9 +53,44 @@ void game_setup(pos* player, pos* dir, pos* fruit) {
     }
 }
 
-int create_fruit_pos() {
+void create_fruit_pos(pos* fruit) {
+    int x = rand() % (BRD_WDTH-1) + 1;
+    int y = rand() % (BRD_HGHT-1) + 1;
 
-}
+    //if the position is on a free tile
+    if (board_array[x][y] == 0) {
+        fruit->x = x;
+        fruit->y = y;
+        return;
+    }
+
+    //systimatically using random input find a square that is unoccupied
+    int up_or_down = (rand() % 2) * 2 - 1;
+    for (int j = 0; j<BRD_HGHT; j++) {
+        int left_or_right = (rand() % 2) * 2 - 1;
+        for (int i = 0; i<=BRD_WDTH; i++) {
+            x = x+left_or_right;
+            if (board_array[x][y] == 0) {
+                fruit->x = x;
+                fruit->y = y;
+                return;
+            }
+            if (x==BRD_WDTH) {
+                x=0;
+            }else if (x==0) {
+            x=BRD_WDTH;
+            }
+        }
+        y = y+up_or_down;
+        if (y==BRD_HGHT) {
+            y=0;
+        }else if (y==0) {
+            y=BRD_HGHT;
+        }
+    }
+
+    //still not found
+}   
 
 void generate_game(pos* player, pos* fruit) {
     system("cls");
@@ -64,6 +99,7 @@ void generate_game(pos* player, pos* fruit) {
             if (board_array[x][y] == 2) {
                 printf("#");
             }else if (x== player->x && y== player->y) {
+                board_array[x][y] = 1;
                 printf("0");
             }else if (x== fruit->x && y== fruit->y) {
                 printf("*");
@@ -73,6 +109,11 @@ void generate_game(pos* player, pos* fruit) {
         }
         printf("\n");
     }
+    
+    //display score
+    printf("\n");
+    printf("Score: %d\n", score);
+    printf("Press x to end.");
 }
 
 void get_input(pos* dir) {
@@ -124,6 +165,14 @@ void process_input(pos* player, pos* dir, pos* fruit) {
     }
 
     //check if fruit is found
+    if (player->x==fruit->x&&player->y==fruit->y) {
+        score++;
+        create_fruit_pos(fruit);
+    }
+
+    //remove previous player pos from board
+    board_array[player->x][player->y] = 0;
+
     
 }
 
