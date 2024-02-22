@@ -2,33 +2,65 @@
 #include <stdio.h>
 #include <conio.h>
 #include <windows.h>
+#include <assert.h>
 
 #define GME_OVER 0;
 #define GME_CONT 1;
 const int BRD_WDTH = 20;
 const int BRD_HGHT = 20;
 
+typedef struct node node_t; //repesents a node 
+
 typedef struct {
     int x;
     int y;
-}pos;
+} pos_t;
 
-void game_setup(pos* player, pos* dir, pos* fruit);
-void generate_game(pos* player, pos* fruit);
-void create_fruit_pos(pos* fruit);
-void get_input(pos* dir);
-void process_input(pos* player, pos* dir, pos* fruit);
+struct node {
+    pos_t* data;
+    node_t* next;
+};
+
+typedef struct {
+    node_t *head;
+    node_t *tail;
+} snake_t;
+
+//snake tail functions
+snake_t* insert_at_tail(snake_t*, int);
+snake_t* make_new_snake(pos_t*);
+snake_t* update_snake(snake_t*, pos_t*);
+
+//game functions
+void game_setup(pos_t* player, pos_t* dir, pos_t* fruit);
+void generate_game(pos_t* player, pos_t* fruit);
+void create_fruit_pos(pos_t* fruit);
+void get_input(pos_t* dir);
+void process_input(pos_t* player, pos_t* dir, pos_t* fruit);
 
 //make a que data structure
 int score;
 int game_state = GME_CONT;
 int board_array[20][20];//have to implicitly type this as VLAs are not supported by vs code for c17 :(
 
-void game_setup(pos* player, pos* dir, pos* fruit) {
+//snake tail functions
+snake_t* make_new_snake(pos_t* player) {
+    snake_t* snake;
+    snake = (snake_t*)malloc(sizeof(*snake));
+
+    node_t* snake_head;
+    snake_head = (node_t*)malloc(sizeof(*snake_head));
+
+
+
+}
+
+//sets up game varibles 
+void game_setup(pos_t* player, pos_t* dir, pos_t* fruit) {
        
     //starting positions
-    player->x = 10;
-    player->y = 10;
+    player->x = BRD_WDTH/2;
+    player->y = BRD_WDTH/2;
     dir->x = 0;
     dir->y = 0;
 
@@ -53,7 +85,7 @@ void game_setup(pos* player, pos* dir, pos* fruit) {
     }
 }
 
-void create_fruit_pos(pos* fruit) {
+void create_fruit_pos(pos_t* fruit) {
     int x = rand() % (BRD_WDTH-1) + 1;
     int y = rand() % (BRD_HGHT-1) + 1;
 
@@ -92,7 +124,7 @@ void create_fruit_pos(pos* fruit) {
     //still not found
 }   
 
-void generate_game(pos* player, pos* fruit) {
+void generate_game(pos_t* player, pos_t* fruit) {
     system("cls");
     for (int y = 0; y <= BRD_HGHT; y++) {
         for (int x = 0; x <= BRD_WDTH; x++) {
@@ -116,7 +148,7 @@ void generate_game(pos* player, pos* fruit) {
     printf("Press x to end.");
 }
 
-void get_input(pos* dir) {
+void get_input(pos_t* dir) {
     if (kbhit()) {
         switch(getch()) { //prevents back travel
             case 'a':
@@ -152,7 +184,7 @@ void get_input(pos* dir) {
     }
 }
 
-void process_input(pos* player, pos* dir, pos* fruit) {
+void process_input(pos_t* player, pos_t* dir, pos_t* fruit) {
 
     Sleep(500);
     player->x += dir->x;
@@ -179,9 +211,9 @@ void process_input(pos* player, pos* dir, pos* fruit) {
 
 int main(int argc, char *argv[])
 {
-    pos* player_pos = (pos*)malloc(sizeof(player_pos));
-    pos* fruit_pos = (pos*)malloc(sizeof(fruit_pos));
-    pos* dir = (pos*)malloc(sizeof(dir));
+    pos_t* player_pos = (pos_t*)malloc(sizeof(player_pos));
+    pos_t* fruit_pos = (pos_t*)malloc(sizeof(fruit_pos));
+    pos_t* dir = (pos_t*)malloc(sizeof(dir));
     
     //setup game
     game_setup(player_pos, dir, fruit_pos);
