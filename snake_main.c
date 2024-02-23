@@ -280,14 +280,6 @@ void process_input(pos_t* player, pos_t* dir, pos_t* fruit, snake_t* snake) {
     board_array[snake->tail_tip->data.x][snake->tail_tip->data.y] = 0;
     player->x += dir->x;
     player->y += dir->y;
-    board_array[player->x][player->y] = 3;
-    
-    //check not hitting border
-    if (player->x <= 0 || player->y <= 0 || player->x >= BRD_WDTH || player->y >= BRD_HGHT) {
-        game_state = GME_OVER;
-        return;
-    }
-
     //check if fruit is found
     if (player->x==fruit->x&&player->y==fruit->y) {
         score+=1;
@@ -298,6 +290,14 @@ void process_input(pos_t* player, pos_t* dir, pos_t* fruit, snake_t* snake) {
     }else {
         snake = update_snake(snake, player, dir);
     }
+
+    //check not hitting tail or border
+    if (board_array[player->x][player->y] != 0) {
+        game_state = GME_OVER;
+        return;
+    }
+    board_array[player->x][player->y] = 3;
+
 }
 
 
