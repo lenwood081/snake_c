@@ -33,6 +33,8 @@ typedef struct {
 snake_t* make_new_snake(pos_t*);
 snake_t* insert_at_tail(snake_t*);
 snake_t* update_snake(snake_t*, pos_t*, pos_t*);
+void free_snake_nodes(node_t*);
+void free_snake(snake_t*);
 
 //game functions
 void game_setup(pos_t*, pos_t*, pos_t*);
@@ -67,6 +69,7 @@ int main(int argc, char *argv[])
        process_input(player_pos, dir, fruit_pos, snake);
     }
 
+    free_snake(snake);
     return 0;
 }
 
@@ -133,6 +136,22 @@ snake_t* update_snake(snake_t* snake, pos_t* snake_head_pos, pos_t* dir) {
     
 
     return snake;
+}
+
+//free the snake object
+void free_snake(snake_t* snake) {
+    free_snake_nodes(snake->tail_tip);
+    snake->head=NULL;
+    snake->tail_tip=NULL;
+    free(snake);
+}
+
+void free_snake_nodes(node_t* snake_tail_tip) {
+    if (snake_tail_tip->next!=NULL) {
+        free_snake_nodes(snake_tail_tip->next);
+        snake_tail_tip->next=NULL;
+    }
+    free(snake_tail_tip);
 }
 
 //sets up game varibles 
