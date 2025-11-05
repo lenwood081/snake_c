@@ -63,7 +63,9 @@ Avoid colliding with the walls `#` or your own body — or the game ends!
 ## ⚙️ File Structure
 
 snake/
+
 ├── snake.c        # main source file
+
 └── README.md      # project documentation
 
 
