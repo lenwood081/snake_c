@@ -52,4 +52,19 @@ Avoid colliding with the walls `#` or your own body — or the game ends!
 1. Open **Command Prompt** or **PowerShell**.  
 2. Navigate to the folder containing your source file:
    ```bash
-   cd path\to\snake
+   cd path\to\snakey
+3. Compile with GCC:
+   ```bash
+   gcc snake.c -o snake.exe
+4. Run:
+   ```bash
+   snake.exe
+
+## ⚙️ File Structure
+
+snake/
+├── snake.c        # main source file
+└── README.md      # project documentation
+
+
+
